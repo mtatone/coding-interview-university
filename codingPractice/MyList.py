@@ -24,11 +24,11 @@ class ItemInterface(ABC):
     @abstractmethod
     def value(self):
         pass
-    @abstractmethod
-    def __init__(self, value):
+    @value.setter
+    def value(self, value):
         pass
     @abstractmethod
-    def get_value(self):
+    def __init__(self, value):
         pass
 
 
@@ -64,9 +64,35 @@ class MyList(FormalListInterface):
         self.list.append(item)
 
 
+class Item(ItemInterface):
+
+    def __init__(self, value):
+        self.value = value
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value):
+        self._value = value
+
+
+
 print("Displaying a simple list")
-thelist = MyList()
-print("list legth: {}".format(thelist.length))
-thelist.add_item(item=5)
-print("list legth: {}".format(thelist.length))
-print("item in index {} is: {}".format(0, thelist.get_item(index=0)))
+theList = MyList()
+print("list legth: {}".format(theList.length))
+theList.add_item(item=5)
+print("list legth: {}".format(theList.length))
+print("item in index {} is: {}".format(0, theList.get_item(index=0)))
+
+
+print("\nDisplaying a simple list but now using items class as well")
+item = Item(69)
+print("Item's value: {}".format(item.value))
+itemList = MyList()
+print("list legth: {}".format(itemList.length))
+itemList.add_item(item=item)
+print("New List legth: {}".format(itemList.length))
+print("item in index {} is: {}".format(0, itemList.get_item(index=0).value))
+
