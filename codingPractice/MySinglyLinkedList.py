@@ -12,10 +12,6 @@ class FormalListInterface(ABC):
         pass
 
     @abstractmethod
-    def get_item(self, index):
-        pass
-
-    @abstractmethod
     def _increment_length(self):
         pass
 
@@ -33,56 +29,34 @@ class ItemInterface(ABC):
     @abstractmethod
     def value(self):
         pass
+
     @value.setter
     def value(self, value):
         pass
+
     @abstractmethod
     def __init__(self, value):
         pass
 
 
-class MyList(FormalListInterface):
+class MyLinkedList(FormalListInterface):
     def __init__(self):
         self.length = 0
-        self.list = []
+        self.head = None
 
     @property
-    def length(self):
+    def length(self) -> int:
         return self._length
 
     @length.setter
     def length(self, value):
         self._length = value
 
-    def get_item(self, index=False):
-        if index:
-            return self.list[index]
-        else:
-            return self.list[self.length - 1]
-
     def _increment_length(self):
         self.length += 1
 
     def _decrement_length(self):
         self.length -= 1
-
-    def add_item(self, item):
-        self._increment_length()
-        self.list.append(item)
-
-    def delete_item(self, index=False):
-        if index:
-            self.list.pop(index=index)
-        else:
-            self.list.pop()
-
-        self._decrement_length()
-
-
-class MyLinkedList(MyList):
-    def __init__(self):
-        self.length = 0
-        self.head = None
 
     @property
     def head(self):
@@ -123,8 +97,14 @@ class MyLinkedList(MyList):
                     self._increment_length()
                     return
                 last_item = last_item.next_item
-            print("unable to insert item")
-            exit()
+            if last_item.value == ref:
+                item.next_item = last_item.next_item
+                last_item.next_item = item
+                self._increment_length()
+                return
+            else:
+                print("unable to insert item")
+                exit()
 
     def insert_before(self, item, ref):
         if self.head == None:
@@ -145,31 +125,75 @@ class MyLinkedList(MyList):
             print("unable to insert item")
             exit()
 
-    def delete_item(self):
+    def delete_item(self, ref=False):
         if self.head == None:
             print("List is empty dumb dumb")
             exit()
-        elif self.head.next_item == None:
-            self.head = None
-            return
-        last_item = self.head
-        while last_item.next_item != None:
-            if last_item.next_item.next_item == None:
-                last_item.next_item = None
+        if ref:
+            if self.head.value == ref:
+                self.head = self.head.next_item
                 return
-            last_item = last_item.next_item
+            last_item = self.head
+            while last_item.next_item != None:
+                if last_item.next_item.value == ref:
+                    last_item.next_item = last_item.next_item.next_item
+                    self._decrement_length()
+                    return
 
-    def delete_item(self, ref):
+                last_item = last_item.next_item
+        else:
+            if self.head.next_item == None:
+                self.head = None
+                return
+            last_item = self.head
+            while last_item.next_item != None:
+                if last_item.next_item.next_item == None:
+                    last_item.next_item = None
+                    self._decrement_length()
+                    return
+                last_item = last_item.next_item
+        print("unable to delete item")
+        exit()
+
+    def delete_before(self, ref):
         if self.head == None:
             print("List is empty dumb dumb")
             exit()
-        last_item = self.head
-        while last_item.next_item != None:
-            if last_item.value == ref:
+        else:
+            if self.head.value == ref:
+                self.head = self.head.next_item
+                return
+            last_item = self.head
+            while last_item.next_item != None:
+                if last_item.next_item.next_item.value == ref:
+                    last_item.next_item = last_item.next_item.next_item
+                    self._decrement_length()
+                    return
+                last_item = last_item.next_item
+            print("unable to delete item")
+            exit()
 
-            last_item = [self.head.next_item]
-
-        self._decrement_length()
+    def delete_after(self, ref):
+        if self.head == None:
+            print("List is empty dumb dumb")
+            exit()
+        else:
+            if self.head.value == ref:
+                self.head = self.head.next_item
+                return
+            last_item = self.head
+            while last_item.next_item != None:
+                if last_item.value == ref:
+                    last_item.next_item = last_item.next_item.next_item
+                    self._decrement_length()
+                    return
+                if last_item.next_item.next_item.value == ref:
+                    last_item.next_item = last_item.next_item.next_item
+                    self._decrement_length()
+                    return
+                last_item = last_item.next_item
+            print("unable to delete item")
+            exit()
 
     @classmethod
     def print(cls, itm):
@@ -205,29 +229,6 @@ class LinkedItem(Item):
         self._next_item = next_item
 
 
-# print("Displaying a simple list")
-# theList = MyList()
-# print("list legth: {}".format(theList.length))
-# theList.add_item(item=5)
-# print("list legth: {}".format(theList.length))
-# print("item in index {} is: {}".format(0, theList.get_item(index=0)))
-# theList.add_item(item=69)
-# print("list legth: {}".format(theList.length))
-# print("item in index {} is: {}".format(0, theList.get_item()))
-# theList.delete_item()
-# print("list legth: {}".format(theList.length))
-# print("item in index {} is: {}".format(0, theList.get_item()))
-#
-# print("\nDisplaying a simple list but now using items class as well")
-# item = Item(69)
-# print("Item's value: {}".format(item.value))
-# itemList = MyList()
-# print("list legth: {}".format(itemList.length))
-# itemList.add_item(item=item)
-# print("New List legth: {}".format(itemList.length))
-# print("item in index {} is: {}".format(0, itemList.get_item(index=0).value))
-
-
 print("\nDisplaying a linked list:")
 linked_list = MyLinkedList()
 linked_list.add_item(LinkedItem(69))
@@ -242,8 +243,18 @@ MyLinkedList.print(linked_list.head)
 linked_list.delete_item()
 print("Printing out linked list after deletion")
 MyLinkedList.print(linked_list.head)
-linked_list.insert_before(item=LinkedItem(420), ref=23)
-linked_list.delete_item(23)
+linked_list.insert_before(item=LinkedItem(420), ref=26)
+linked_list.delete_item(420)
 print("Printing out linked list after deletion")
 MyLinkedList.print(linked_list.head)
-
+linked_list.insert_after(item=LinkedItem(420), ref=69)
+linked_list.insert_before(item=LinkedItem(69420), ref=26)
+linked_list.insert_after(item=LinkedItem(6969), ref=26)
+print("Printing out linked list after insertions")
+MyLinkedList.print(linked_list.head)
+linked_list.delete_after(ref=26)
+linked_list.delete_before(ref=26)
+linked_list.delete_before(ref=69)
+linked_list.delete_after(ref=26)
+print("Printing out linked list after deletions")
+MyLinkedList.print(linked_list.head)
