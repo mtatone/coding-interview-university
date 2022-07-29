@@ -2,14 +2,14 @@ from abc import ABC, abstractmethod
 
 
 class HashTableInterface(ABC):
-    @property
-    @abstractmethod
-    def hash_table(self):
-        pass
-
-    @hash_table.setter
-    def hash_table(self, value):
-        pass
+    # @property
+    # @abstractmethod
+    # def hash_table(self):
+    #     pass
+    #
+    # @hash_table.setter
+    # def hash_table(self, value):
+    #     pass
 
     @abstractmethod
     def hash_function(self, key):
@@ -21,6 +21,10 @@ class HashTableInterface(ABC):
 
     @abstractmethod
     def remove(self, key):
+        pass
+
+    @abstractmethod
+    def get(self, key):
         pass
 
     @abstractmethod
@@ -71,38 +75,81 @@ class MyKeyValuePair(KeyValuePairInterface):
 
 
 class MyHashTable(HashTableInterface):
-    def __init__(self):
-        self.hash_table = [MyKeyValuePair("", ""), ] * 10
+    def __init__(self, length):
+        # By only creating a 1d array you save space until you insert an item into that index
+        self.hash_table = [None] * length
 
-    @property
-    def hash_table(self):
-        return self._hash_table
-
-    @hash_table.setter
-    def hash_table(self, value):
-        self._hash_table = value
+    # @property
+    # def hash_table(self):
+    #     return self._hash_table
+    #
+    # @hash_table.setter
+    # def hash_table(self, value):
+    #     self._hash_table = value
 
     def hash_function(self, key):
-        return key % 10
+        return key % len(self.hash_table)
 
     def insert(self, kv):
-        index = self.hash_function(kv.key)
-        self.hash_table[index] = kv
+        #TODO: Redo this so that it includes collision handling
+        # Go to index, if its not none (i.e it contains data)
+        # check if the index already exits, if it does then update the vlaue
+        # if not then you need to add it to the list in that index
+        index = self.hash_function(kv[0])
+        if self.hash_table[index] == None:
+            self.hash_table[index] = [kv]
+        else:
+            for item in self.hash_table[index]:
+                if item[0] == kv[0]:
+                    item[1] = kv[1]
+                    return
+            self.hash_table[index].append(kv)
+
+    def get(self, key):
+        # TODO: update to include finding a key after a collision
+        # Go to index, iterate through the list to find the key we want from the sublist
+        # return it
+        index = self.hash_function(key)
+        for item in self.hash_table[index]:
+            if item[0] == key:
+                return item[1]
+        return "Unable To Find Key"
 
     def remove(self, key):
+        # TODO: update to include finding a key after a collision
+        # Go to index, iterate through the list to find the key we want from the sublist
+        # Remove it
         index = self.hash_function(key)
-        self.hash_table[index] = MyKeyValuePair("", "")
+        for item_index, item in enumerate(self.hash_table[index]):
+            if item[0] == key:
+                if len(self.hash_table[index]) == 1:
+                    self.hash_table[index] = None
+                    return
+                else:
+                    del(self.hash_table[index][item_index])
+                    return -1
+        return "Unable To Find Key"
 
     def print(self):
         for item in self.hash_table:
-            print("[Key:{}, Value: {}]".format(item.key, item.value))
+            if item == None:
+                print("[]")
+            else:
+                print(item)
 
 
-hash_table = MyHashTable()
-hash_table.insert(MyKeyValuePair(20, "Hello World"))
-hash_table.insert(MyKeyValuePair(321, "This is working"))
-hash_table.insert(MyKeyValuePair(432, "Woah is this working?"))
-hash_table.insert(MyKeyValuePair(909, "Woah is this working?"))
+hash_table = MyHashTable(10)
+hash_table.insert([123, "Marco"])
+hash_table.insert([323, "Marco Tee"])
+hash_table.insert([321, "This is working"])
+hash_table.print()
+print("")
+print(hash_table.get(123))
+print("")
+print(hash_table.get(321))
+hash_table.insert([432, "Woah is this working?"])
+hash_table.insert([909, "Woah is this working?"])
+print("")
 hash_table.print()
 print("\nLets Try Removing something")
 hash_table.remove(432)
