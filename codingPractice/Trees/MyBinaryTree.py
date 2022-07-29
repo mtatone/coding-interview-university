@@ -108,15 +108,22 @@ class MyNode(NodeInterface):
         self.print()
         if self.left != None:
             self.left.pre_order_traversal()
-        if self.right() != None:
+        if self.right != None:
             self.right.pre_order_traversal()
-        return
 
     def in_order_traversal(self):
-        pass
+        if self.left != None:
+            self.left.pre_order_traversal()
+        self.print()
+        if self.right != None:
+            self.right.pre_order_traversal()
 
     def post_order_traversal(self):
-        pass
+        if self.left != None:
+            self.left.pre_order_traversal()
+        if self.right != None:
+            self.right.pre_order_traversal()
+        self.print()
 
     def print(self):
         print(self.value)
@@ -132,5 +139,9 @@ head.left.left = MyNode(420)
 #Pre Order: 12, 24, 420, 69
 #In Oder: 420, 24, 69,12
 #Post Order: 420, 69, 24, 12
+print("PreOrder")
 head.pre_order_traversal()
-head.print()
+print("InOrder")
+head.in_order_traversal()
+print("PostOrder")
+head.post_order_traversal()
