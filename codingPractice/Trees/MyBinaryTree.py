@@ -108,10 +108,8 @@ class MyNode(NodeInterface):
         self.print()
         if self.left != None:
             self.left.pre_order_traversal()
-            return
-        elif self.right() != None:
+        if self.right() != None:
             self.right.pre_order_traversal()
-            return
         return
 
     def in_order_traversal(self):
