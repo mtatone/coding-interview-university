@@ -76,25 +76,12 @@ class MyKeyValuePair(KeyValuePairInterface):
 
 class MyHashTable(HashTableInterface):
     def __init__(self, length):
-        # By only creating a 1d array you save space until you insert an item into that index
         self.hash_table = [None] * length
-
-    # @property
-    # def hash_table(self):
-    #     return self._hash_table
-    #
-    # @hash_table.setter
-    # def hash_table(self, value):
-    #     self._hash_table = value
 
     def hash_function(self, key):
         return key % len(self.hash_table)
 
     def insert(self, kv):
-        #TODO: Redo this so that it includes collision handling
-        # Go to index, if its not none (i.e it contains data)
-        # check if the index already exits, if it does then update the vlaue
-        # if not then you need to add it to the list in that index
         index = self.hash_function(kv[0])
         if self.hash_table[index] == None:
             self.hash_table[index] = [kv]
@@ -106,9 +93,6 @@ class MyHashTable(HashTableInterface):
             self.hash_table[index].append(kv)
 
     def get(self, key):
-        # TODO: update to include finding a key after a collision
-        # Go to index, iterate through the list to find the key we want from the sublist
-        # return it
         index = self.hash_function(key)
         for item in self.hash_table[index]:
             if item[0] == key:
@@ -116,9 +100,6 @@ class MyHashTable(HashTableInterface):
         return "Unable To Find Key"
 
     def remove(self, key):
-        # TODO: update to include finding a key after a collision
-        # Go to index, iterate through the list to find the key we want from the sublist
-        # Remove it
         index = self.hash_function(key)
         for item_index, item in enumerate(self.hash_table[index]):
             if item[0] == key:
