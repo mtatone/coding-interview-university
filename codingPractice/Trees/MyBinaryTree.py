@@ -165,7 +165,7 @@ def is_perfect_tree(node):
 
 
 def is_balanced_tree(node):
-    # the heigh of the left subtree and the right subtree of any node differ by 1 or less
+    # the height of the left subtree and the right subtree of any node differ by 1 or less
     if node is None:
         return
     if height(node.left) - height(node.right) < 2:
@@ -194,33 +194,62 @@ def is_complete_tree(node):
         return is_complete_tree(node.left) and is_complete_tree(node.left)
 
 
-def delete(root, node_to_delete):
+def delete(root, key_to_delete):
     if root is None:
         return
     if root.left is None and root.right is None:
-        if root.value == node_to_delete:
+        if root.value == key_to_delete:
             return None
         else:
             return root
 
     q = [root]
-    delete_me = None
+    node_to_delete = None
+    # loop through tree to find the key we want to delete
+    # by the nature of level_traversal the last node visited is the deepest right node
     while len(q) != 0:
-        node = q.pop(0)
-        node.print()
-        if node.left is not None:
-            q.append(node.left)
-        if node.right is not None:
-            q.append(node.right)
+        temp = q.pop(0)
+        if temp.value == key_to_delete:
+            node_to_delete = temp
+        if temp.left is not None:
+            q.append(temp.left)
+        if temp.right is not None:
+            q.append(temp.right)
+    # if we find the node we want to delete we move onto swapping the deepest right with the key to delete
+    # finally we delete the deepest right which is now the key we wanted to delete
+    if node_to_delete:
+        x = temp.value
+        # we have the deepest right value in x, so we can now delete it
+        delete_deepest(root, temp)
+        # set the node with key we wanted to delete to the deepest_right
+        node_to_delete.value = x
 
-    # find the delete me node
-    delete_me = head
-    # while delete_me
-    # find the deepest right node
-    # set depest right node left and right to that of the deleteme
-    # set the deleteme parents refrence to the deepest right node
-    # set the deepest right node's parent regerence to the delte me
-    # delete the delete me
+
+def delete_deepest(root, delete_me_node):
+    q = [root]
+    # loop through tree to find the key we want to delete
+    # by the nature of level_traversal the last node visited is the deepest right node
+    while len(q) != 0:
+        temp = q.pop(0)
+        if temp.value == delete_me_node.value:
+            temp = None
+            return
+        if temp.left is not None:
+            # check if the left is the node_to_delete
+            # if it is then set it to None
+            # else: append temp.left
+            if temp.left.value == delete_me_node.value:
+                temp.left = None
+            else:
+                q.append(temp.left)
+        if temp.right is not None:
+            # check if the right is the node_to_delete
+            # if it is then set it to None
+            # else append temp.right
+            if temp.right.value == delete_me_node.value:
+                temp.right = None
+            else:
+                q.append(temp.right)
 
 
 def main():
@@ -278,6 +307,10 @@ def main():
     head3.level_order_insert(MyNode(4))
     print(is_balanced_tree(head3))
     # print(is_full_tree(root))
+
+    print("\nDeletion")
+    delete(root, 5)
+    root.print_level_order()
 
 
 if __name__ == "__main__":
