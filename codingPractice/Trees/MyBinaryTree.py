@@ -29,137 +29,9 @@ class NodeInterface(ABC):
     def left(self):
         pass
 
-    # @abstractmethod
-    # def pre_order_traversal(self):
-    #     pass
-    #
-    # @abstractmethod
-    # def post_order_traversal(self):
-    #     pass
-    #
-    # @abstractmethod
-    # def in_order_traversal(self):
-    #     pass
-
     @abstractmethod
     def print(self):
         pass
-
-
-class BinaryTreeInterface(ABC):
-    @property
-    @abstractmethod
-    def head(self):
-        pass
-
-    @head.setter
-    def head(self):
-        pass
-
-    def print(self):
-        pass
-
-
-class MyBinaryTree(BinaryTreeInterface):
-    def __init__(self, head):
-        self.head = head
-
-    @property
-    def head(self):
-        return self._head
-
-    @head.setter
-    def head(self, value):
-        self._head = value
-
-    def print(self):
-        self.head.print()
-
-    @classmethod
-    def height(cls, node):
-        if node is None:
-            return 0
-        else:
-            left_height = MyBinaryTree.height(node.left)
-            right_height = MyBinaryTree.height(node.right)
-            return max(left_height + 1, right_height + 1)
-
-    @classmethod
-    def width(cls, node):
-        if node is None:
-            return 0
-        left_height = MyBinaryTree.height(node.left)
-        right_height = MyBinaryTree.height(node.right)
-        left_width = MyBinaryTree.width(node.left)
-        right_width = MyBinaryTree.width(node.right)
-
-        return max((left_height + right_height + 1), left_width, right_width)
-
-    #TODO:
-    @classmethod
-    def is_full_tree(cls, node):
-        #every parent node/internal node has either 2 children or none
-        # basically if any parent doesnt have 2 children then its not a full_tree
-        if node is None:
-            return
-        if node.left is None and node.right is None:
-            return True
-        elif node.left is None or node.right is None:
-            return False
-        else:
-            return MyBinaryTree.is_full_tree(node.left) and MyBinaryTree.is_full_tree(node.left)
-
-
-    #TODO:
-    @classmethod
-    def is_perfect_tree(cls, node):
-        # if a node has height greater than 0 (h > 0), and if both subtrees are of height h-1 then its a perfect tree
-        if node is None:
-            return
-        node_height = MyBinaryTree.height(node)
-        if node_height > 0:
-            if MyBinaryTree.height(node.left) == (node_height - 1) and MyBinaryTree.height(node.right) == (node_height - 1):
-                if node.left is None and node.right is None:
-                    return True
-                else:
-                    return MyBinaryTree.is_perfect_tree(node.left) and MyBinaryTree.is_perfect_tree(node.right)
-            else:
-                return False
-        else:
-            return True
-
-    #TODO:
-    @classmethod
-    def is_balanced_tree(cls, node):
-        #the heigh of the left subtree and the right subtree of any node differ by 1 or less
-        if node is None:
-            return
-        if MyBinaryTree.height(node.left) - MyBinaryTree.height(node.right) < 2:
-            if node.left is None and node.right is None:
-                return True
-            elif node.left is not None:
-                return MyBinaryTree.is_balanced_tree(node.left)
-            elif node.right is not None:
-                return MyBinaryTree.is_balanced_tree(node.right)
-            else:
-                return MyBinaryTree.is_balanced_tree(node.left) and MyBinaryTree.is_balanced_tree(node.right)
-        else:
-            return False
-
-
-    #TODO:
-    @classmethod
-    def is_complete_tree(cls, node):
-        #essentially a full tree with the exception of the last leaft element might not have a right sibling
-        # leafs might not have a right sibling
-        if node is None:
-            return
-        if node.left is None and node.right is None:
-            return True
-        elif node.left is not None and node.right is None:
-            return MyBinaryTree.is_complete_tree(node.left)
-        else:
-            return MyBinaryTree.is_complete_tree(node.left) and MyBinaryTree.is_complete_tree(node.left)
 
 
 class MyNode(NodeInterface):
@@ -242,6 +114,116 @@ class MyNode(NodeInterface):
                 return
 
 
+def height(node):
+    if node is None:
+        return 0
+    else:
+        left_height = height(node.left)
+        right_height = height(node.right)
+        return max(left_height + 1, right_height + 1)
+
+
+def width(node):
+    if node is None:
+        return 0
+    left_height = height(node.left)
+    right_height = height(node.right)
+    left_width = width(node.left)
+    right_width = width(node.right)
+
+    return max((left_height + right_height + 1), left_width, right_width)
+
+
+def is_full_tree(node):
+    # every parent node/internal node has either 2 children or none
+    # basically if any parent doesnt have 2 children then its not a full_tree
+    if node is None:
+        return
+    if node.left is None and node.right is None:
+        return True
+    elif node.left is None or node.right is None:
+        return False
+    else:
+        return is_full_tree(node.left) and is_full_tree(node.left)
+
+
+def is_perfect_tree(node):
+    # if a node has height greater than 0 (h > 0), and if both subtrees are of height h-1 then its a perfect tree
+    if node is None:
+        return
+    node_height = height(node)
+    if node_height > 0:
+        if height(node.left) == (node_height - 1) and height(node.right) == (node_height - 1):
+            if node.left is None and node.right is None:
+                return True
+            else:
+                return is_perfect_tree(node.left) and is_perfect_tree(node.right)
+        else:
+            return False
+    else:
+        return True
+
+
+def is_balanced_tree(node):
+    # the heigh of the left subtree and the right subtree of any node differ by 1 or less
+    if node is None:
+        return
+    if MyBinaryTree.height(node.left) - MyBinaryTree.height(node.right) < 2:
+        if node.left is None and node.right is None:
+            return True
+        elif node.left is not None:
+            return is_balanced_tree(node.left)
+        elif node.right is not None:
+            return is_balanced_tree(node.right)
+        else:
+            return is_balanced_tree(node.left) and is_balanced_tree(node.right)
+    else:
+        return False
+
+
+def is_complete_tree(node):
+    # essentially a full tree with the exception of the last leaft element might not have a right sibling
+    # leafs might not have a right sibling
+    if node is None:
+        return
+    if node.left is None and node.right is None:
+        return True
+    elif node.left is not None and node.right is None:
+        return is_complete_tree(node.left)
+    else:
+        return is_complete_tree(node.left) and is_complete_tree(node.left)
+
+
+def delete(root, node_to_delete):
+    if root is None:
+        return
+    if root.left is None and root.right is None:
+        if root.value == node_to_delete:
+            return None
+        else:
+            return root
+
+    q = [root]
+    delete_me = None
+    while len(q) != 0:
+        node = q.pop(0)
+        node.print()
+        if node.left is not None:
+            q.append(node.left)
+        if node.right is not None:
+            q.append(node.right)
+
+    # find the delete me node
+    delete_me = head
+    # while delete_me
+    # find the deepest right node
+    # set depest right node left and right to that of the deleteme
+    # set the deleteme parents refrence to the deepest right node
+    # set the deepest right node's parent regerence to the delte me
+    # delete the delete me
+
+
+
 head = MyNode(12)
 head.left = MyNode(24)
 head.left.right = MyNode(69)
@@ -260,8 +242,8 @@ print("\nInOrder")
 head.print_in_order()
 print("\nPostOrder")
 head.print_post_order()
-print("\nWidth: {}".format(MyBinaryTree.width(head)))
-print("Height: {}".format(MyBinaryTree.height(head)))
+print("\nWidth: {}".format(width(head)))
+print("Height: {}".format(height(head)))
 
 print("Level Insert")
 head2 = MyNode(1)
@@ -270,10 +252,10 @@ head2.level_order_insert(MyNode(3))
 head2.level_order_insert(MyNode(4))
 head2.level_order_insert(MyNode(5))
 head2.level_order_insert(MyNode(6))
-head2.level_order_insert(MyNode(7))
+# head2.level_order_insert(MyNode(7))
 head2.print_level_order()
-print("\nWidth: {}".format(MyBinaryTree.width(head2)))
-print("Height: {}".format(MyBinaryTree.height(head2)))
+print("\nWidth: {}".format(width(head2)))
+print("Height: {}".format(height(head2)))
 
 root = MyNode(1)
 root.left = MyNode(2)
@@ -289,10 +271,10 @@ print("\nInOrder")
 root.print_in_order()
 print("\nPostOrder")
 root.print_post_order()
-print(MyBinaryTree.is_full_tree(head2))
+print(is_full_tree(head2))
 head3 = MyNode(1)
 head3.level_order_insert(MyNode(2))
 head3.level_order_insert(MyNode(3))
 head3.level_order_insert(MyNode(4))
-print(MyBinaryTree.is_balanced_tree(head3))
-# print(MyBinaryTree.is_full_tree(root))
+print(is_balanced_tree(head3))
+# print(is_full_tree(root))
