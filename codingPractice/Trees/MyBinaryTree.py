@@ -168,7 +168,7 @@ def is_balanced_tree(node):
     # the heigh of the left subtree and the right subtree of any node differ by 1 or less
     if node is None:
         return
-    if MyBinaryTree.height(node.left) - MyBinaryTree.height(node.right) < 2:
+    if height(node.left) - height(node.right) < 2:
         if node.left is None and node.right is None:
             return True
         elif node.left is not None:
@@ -223,58 +223,63 @@ def delete(root, node_to_delete):
     # delete the delete me
 
 
+def main():
+    head = MyNode(12)
+    head.left = MyNode(24)
+    head.left.right = MyNode(69)
+    head.left.left = MyNode(420)
+    head.left.left.left = MyNode(21)
+    #            12
+    #         24
+    #    420     69
+    # Pre Order: 12, 24, 420, 69
+    # In Oder: 420, 24, 69,12
+    # Post Order: 420, 69, 24, 12
 
-head = MyNode(12)
-head.left = MyNode(24)
-head.left.right = MyNode(69)
-head.left.left = MyNode(420)
-head.left.left.left = MyNode(21)
-#            12
-#         24
-#    420     69
-# Pre Order: 12, 24, 420, 69
-# In Oder: 420, 24, 69,12
-# Post Order: 420, 69, 24, 12
+    print("PreOrder")
+    head.print_pre_order()
+    print("\nInOrder")
+    head.print_in_order()
+    print("\nPostOrder")
+    head.print_post_order()
+    print("\nWidth: {}".format(width(head)))
+    print("Height: {}".format(height(head)))
 
-print("PreOrder")
-head.print_pre_order()
-print("\nInOrder")
-head.print_in_order()
-print("\nPostOrder")
-head.print_post_order()
-print("\nWidth: {}".format(width(head)))
-print("Height: {}".format(height(head)))
+    print("Level Insert")
+    head2 = MyNode(1)
+    head2.level_order_insert(MyNode(2))
+    head2.level_order_insert(MyNode(3))
+    head2.level_order_insert(MyNode(4))
+    head2.level_order_insert(MyNode(5))
+    head2.level_order_insert(MyNode(6))
+    # head2.level_order_insert(MyNode(7))
+    head2.print_level_order()
+    print("\nWidth: {}".format(width(head2)))
+    print("Height: {}".format(height(head2)))
 
-print("Level Insert")
-head2 = MyNode(1)
-head2.level_order_insert(MyNode(2))
-head2.level_order_insert(MyNode(3))
-head2.level_order_insert(MyNode(4))
-head2.level_order_insert(MyNode(5))
-head2.level_order_insert(MyNode(6))
-# head2.level_order_insert(MyNode(7))
-head2.print_level_order()
-print("\nWidth: {}".format(width(head2)))
-print("Height: {}".format(height(head2)))
+    root = MyNode(1)
+    root.left = MyNode(2)
+    root.right = MyNode(3)
+    root.left.left = MyNode(4)
+    root.right.left = MyNode(5)
+    root.right.right = MyNode(6)
+    root.right.left.left = MyNode(7)
+    root.right.left.right = MyNode(8)
+    print("\nPreOrder")
+    root.print_pre_order()
+    print("\nInOrder")
+    root.print_in_order()
+    print("\nPostOrder")
+    root.print_post_order()
+    print(is_full_tree(head2))
+    head3 = MyNode(1)
+    head3.level_order_insert(MyNode(2))
+    head3.level_order_insert(MyNode(3))
+    head3.level_order_insert(MyNode(4))
+    print(is_balanced_tree(head3))
+    # print(is_full_tree(root))
 
-root = MyNode(1)
-root.left = MyNode(2)
-root.right = MyNode(3)
-root.left.left = MyNode(4)
-root.right.left = MyNode(5)
-root.right.right = MyNode(6)
-root.right.left.left = MyNode(7)
-root.right.left.right = MyNode(8)
-print("\nPreOrder")
-root.print_pre_order()
-print("\nInOrder")
-root.print_in_order()
-print("\nPostOrder")
-root.print_post_order()
-print(is_full_tree(head2))
-head3 = MyNode(1)
-head3.level_order_insert(MyNode(2))
-head3.level_order_insert(MyNode(3))
-head3.level_order_insert(MyNode(4))
-print(is_balanced_tree(head3))
-# print(is_full_tree(root))
+
+if __name__ == "__main__":
+    main()
+
