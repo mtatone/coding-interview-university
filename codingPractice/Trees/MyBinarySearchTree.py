@@ -1,4 +1,4 @@
-from codingPractice.Trees.MyBinaryTree import *
+from codingPractice.Trees.MyBinaryTree import MyNode
 
 
 def insert(root, node):
